@@ -19,8 +19,9 @@ class TreeViewBusyLabel(QtGui.QLabel):
 
     # =========================================================================
     def __init__(self, tree_view, index):
-        super(TreeViewBusyLabel, self).__init__(tree_view)
+        super(TreeViewBusyLabel, self).__init__(tree_view.viewport())
 
+        self._tree_view = tree_view
         self._p_index = QtCore.QPersistentModelIndex(index)
 
         self._movie = QtGui.QMovie(BUSY_INDICATOR)
@@ -30,7 +31,7 @@ class TreeViewBusyLabel(QtGui.QLabel):
         self.setMovie(self._movie)
 
         # catch the tree view resizes to reposition the busy indicator
-        tree_view.installEventFilter(self)
+        tree_view.viewport().installEventFilter(self)
 
         # need to update position if header sections are resized 
         tree_view.header().sectionResized.connect(
@@ -44,7 +45,7 @@ class TreeViewBusyLabel(QtGui.QLabel):
     # =========================================================================
     def eventFilter(self, object, event):
 
-        # parent() is the tree view
+        # parent is the viewport
         if object == self.parent():
             if event.type() in [QtCore.QEvent.Resize, QtCore.QEvent.Show]:  
                 self._reposition()
@@ -70,15 +71,10 @@ class TreeViewBusyLabel(QtGui.QLabel):
             self.hide()
             return
 
-        tree_view = self.parent()
-
-        index = tree_view.model().index(self._p_index.row(), 
+        index = self._tree_view.model().index(self._p_index.row(), 
             self._p_index.column(), self._p_index.parent())
 
-        rect = tree_view.visualRect(index)
-
-        # TODO: there's probably a better way to account for the header
-        rect.translate(0, tree_view.header().height())
+        rect = self._tree_view.visualRect(index)
         self.setGeometry(rect)
 
 # =============================================================================
