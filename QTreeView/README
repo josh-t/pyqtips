@@ -1,0 +1,7 @@
+
+Quick example to show how to display a busy indicator over an item in a
+QTreeView.  Just run the busy-item.py from this directory and click on an item
+in the view to reveal a busy indicator. The code handles repositioning the
+indicator when the tree view is scrolled, resized, and when the header sections
+are resized. There may be other cases that aren't handled. 
+
