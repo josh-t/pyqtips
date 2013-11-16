@@ -1,0 +1,6 @@
+
+A slider with a value that sticks within a certain range. If you drag the,
+slider handle, it behaves as normal until inside the "sticky range" (supplied
+to the widget constructor) at which time the value "sticks" while the user
+drags the mouse.
+
